@@ -6,5 +6,7 @@
 class Square : public Rectangle {
 public:
     Square(const QPoint &topLeft, int sideLength, const QColor &color);
+    void draw(QPainter &painter) override;
 };
+
 #endif // SQUARE_H

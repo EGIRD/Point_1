@@ -6,13 +6,13 @@
 class Star : public Polygon {
 public:
     Star(const QPoint &center, int outerRadius, int innerRadius, int numPoints, const QColor &color);
-    void draw(QPainter &painter) override; // Переопределение отрисовки
+    void draw(QPainter &painter) override;
 
 private:
-    QPoint center; // Центр звезды
-    int outerRadius; // Внешний радиус
-    int innerRadius; // Внутренний радиус
-    int numPoints; // Количество лучей
+    QPoint center;
+    int outerRadius;
+    int innerRadius;
+    int numPoints;
 };
 
 #endif // STAR_H

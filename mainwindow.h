@@ -38,6 +38,10 @@ private slots:
     void selectColor();
 
 private:
+ Shape* createShape(const QPoint &center, int width, int height, int sideLength);
+ //Shape* createShape(const QPoint &startPoint, const QPoint &endPoint);
+
+private:
     Ui::MainWindow *ui;
     QVector<Shape*> shapes; // Вектор фигур
     QPoint startPoint; // Начальная точка для рисования

@@ -10,7 +10,6 @@
 #include "octagon.h"
 #include "star.h"
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -129,44 +128,47 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
         // Вычисляем размеры фигуры
         int width = abs(endPoint.x() - startPoint.x());
         int height = abs(endPoint.y() - startPoint.y());
-        int sideLength = qMin(width, height); // Для квадрата и круга
+        int sideLength = qMax(width, height); // Для квадрата и круга
         QPoint center((startPoint.x() + endPoint.x()) / 2, (startPoint.y() + endPoint.y()) / 2);
 
         // Создаем фигуру в зависимости от выбранного типа
-        Shape *shape = nullptr;
-        switch (currentShapeType) {
-        case RectangleShape:
-            shape = new Rectangle(startPoint, endPoint, currentColor);
-            break;
-        case SquareShape:
-            shape = new Square(startPoint, sideLength, currentColor);
-            break;
-        case RhombusShape:
-            shape = new Rhombus(center, width, height, currentColor);
-            break;
-        case TriangleShape: {
-            QPoint topPoint((startPoint.x() + endPoint.x()) / 2, startPoint.y()); // Верхняя точка
-            shape = new Triangle(topPoint, QPoint(startPoint.x(), endPoint.y()), QPoint(endPoint.x(), endPoint.y()), currentColor);
-            break;
-        }
-        case CircleShape:
-            shape = new Circle(center, sideLength / 2, currentColor);
-            break;
-        case HexagonShape:
-            shape = new Hexagon(center, sideLength / 2, currentColor);
-            break;
-        case OctagonShape:
-            shape = new Octagon(center, sideLength / 2, currentColor);
-            break;
-        case StarShape:
-            shape = new Star(center, sideLength / 2, sideLength / 4, 5, currentColor); // 5-конечная звезда
-            break;
-        }
+        Shape *shape = createShape(center, width, height, sideLength);
 
         if (shape) {
             shapes.append(shape); // Добавляем фигуру в список
             update(); // Обновляем экран
         }
+    }
+}
+
+Shape* MainWindow::createShape(const QPoint &center, int width, int height, int sideLength) {
+    switch (currentShapeType) {
+    case RectangleShape:
+        return new Rectangle(startPoint, endPoint, currentColor);
+    case SquareShape:
+        return new Square(startPoint, sideLength, currentColor);
+    case RhombusShape:
+        return new Rhombus(center, width, height, currentColor);
+    case TriangleShape: {
+        QPoint topPoint(startPoint.x(), startPoint.y()); // Верхняя точка
+        return  new Triangle(topPoint, QPoint(2 * startPoint.x() -  endPoint.x(), endPoint.y()), QPoint(endPoint.x(), endPoint.y()), currentColor);
+    }
+    case CircleShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new Circle(startPoint, radius, currentColor);
+    }
+    case HexagonShape: {
+         int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new Hexagon(startPoint, radius, currentColor);
+    }
+    case OctagonShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new Octagon(startPoint, radius, currentColor);
+    }
+    case StarShape:
+        return new Star(center, sideLength / 2, sideLength / 4, 5, currentColor); // 5-конечная звезда
+    default:
+        return nullptr;
     }
 }
 
@@ -181,85 +183,49 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 
     // Отрисовка текущей фигуры (если рисуем)
     if (isDrawing) {
-        painter.setPen(currentColor); // Устанавливаем текущий цвет
+        Shape *tempShape = nullptr; // Временный указатель на фигуру
         int width = abs(endPoint.x() - startPoint.x());
         int height = abs(endPoint.y() - startPoint.y());
         QPoint center((startPoint.x() + endPoint.x()) / 2, (startPoint.y() + endPoint.y()) / 2);
 
         switch (currentShapeType) {
         case RectangleShape:
-            painter.drawRect(QRect(startPoint, endPoint)); // Рисуем прямоугольник
+            tempShape = new Rectangle(startPoint, endPoint, currentColor);
             break;
-        case SquareShape: {
-            int sideLength = qMin(width, height);
-            painter.drawRect(QRect(startPoint, QSize(sideLength, sideLength))); // Рисуем квадрат
+        case SquareShape:
+            tempShape = new Square(startPoint, qMin(width, height), currentColor);
             break;
-        }
-        case RhombusShape: {
-            QPoint top(center.x(), center.y() - height / 2);
-            QPoint right(center.x() + width / 2, center.y());
-            QPoint bottom(center.x(), center.y() + height / 2);
-            QPoint left(center.x() - width / 2, center.y());
-            QPoint points[4] = { top, right, bottom, left };
-            painter.drawPolygon(points, 4); // Рисуем ромб
+        case RhombusShape:
+            tempShape = new Rhombus(center, width, height, currentColor);
             break;
-        }
         case TriangleShape: {
-            QPoint topPoint((startPoint.x() + endPoint.x()) / 2, startPoint.y()); // Верхняя точка
-            QPoint bottomLeft(startPoint.x(), endPoint.y()); // Левая нижняя точка
-            QPoint bottomRight(endPoint.x(), endPoint.y()); // Правая нижняя точка
-            QPoint points[3] = { topPoint, bottomLeft, bottomRight };
-            painter.drawPolygon(points, 3); // Рисуем треугольник
+            QPoint topPoint(startPoint.x(), startPoint.y()); // Верхняя точка
+            tempShape =  new Triangle(topPoint, QPoint(2 * startPoint.x() -  endPoint.x(), endPoint.y()), QPoint(endPoint.x(), endPoint.y()), currentColor);
             break;
         }
-        case CircleShape:
-            painter.drawEllipse(center, width / 2, height / 2); // Рисуем круг
+        case CircleShape: {
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new Circle(startPoint, radius, currentColor);
             break;
+        }
         case HexagonShape: {
-            int radius = qMin(width, height) / 2;
-            QVector<QPoint> hexPoints;
-            double angleIncrement = 2 * M_PI / 6; // 6 вершин
-            for (int i = 0; i < 6; ++i) {
-                double angle = i * angleIncrement;
-                int x = center.x() + radius * cos(angle);
-                int y = center.y() + radius * sin(angle);
-                hexPoints.append(QPoint(x, y));
-            }
-            painter.drawPolygon(hexPoints.data(), hexPoints.size()); // Рисуем шестиугольник
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new Hexagon(startPoint, radius, currentColor);
             break;
         }
         case OctagonShape: {
-            int radius = qMin(width, height) / 2;
-            QVector<QPoint> octPoints;
-            double angleIncrement = 2 * M_PI / 8; // 8 вершин
-            for (int i = 0; i < 8; ++i) {
-                double angle = i * angleIncrement;
-                int x = center.x() + radius * cos(angle);
-                int y = center.y() + radius * sin(angle);
-                octPoints.append(QPoint(x, y));
-            }
-            painter.drawPolygon(octPoints.data(), octPoints.size()); // Рисуем восьмиугольник
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new Octagon(startPoint, radius, currentColor);
             break;
         }
-        case StarShape: {
-            int outerRadius = qMin(width, height) / 2;
-            int innerRadius = outerRadius / 2;
-            QVector<QPoint> starPoints;
-            double angleIncrement = 2 * M_PI / 5; // 5-конечная звезда
-            for (int i = 0; i < 5; ++i) {
-                double outerAngle = i * angleIncrement;
-                int x = center.x() + outerRadius * cos(outerAngle);
-                int y = center.y() + outerRadius * sin(outerAngle);
-                starPoints.append(QPoint(x, y));
-
-                double innerAngle = outerAngle + angleIncrement / 2;
-                x = center.x() + innerRadius * cos(innerAngle);
-                y = center.y() + innerRadius * sin(innerAngle);
-                starPoints.append(QPoint(x, y));
-            }
-            painter.drawPolygon(starPoints.data(), starPoints.size()); // Рисуем звезду
+        case StarShape:
+            tempShape = new Star(center, qMin(width, height) / 2, qMin(width, height) / 4, 5, currentColor);
             break;
-            }
+        }
+
+        if (tempShape) {
+            tempShape->draw(painter); // Используем метод draw для временной фигуры
+            delete tempShape; // Освобождаем память
         }
     }
 }

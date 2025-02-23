@@ -5,5 +5,6 @@ Circle::Circle(const QPoint &center, int radius, const QColor &color)
 
 void Circle::draw(QPainter &painter) {
     painter.setPen(color); // Устанавливаем цвет контура
-    painter.drawEllipse(center, radius, radius); // Рисуем круг
+    QRect circleRect(center.x() - radius, center.y() - radius, 2 * radius, 2 * radius);
+    painter.drawEllipse(circleRect); // Рисуем круг
 }
