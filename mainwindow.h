@@ -54,9 +54,11 @@ private:
         CircleShape,
         RhombusShape,
         SquareShape,
-        StarShape,
         HexagonShape,
-        OctagonShape
+        OctagonShape,
+        FiveStarShape,
+        HexStarShape,
+        OctStarShape
     };
     // Тип фигуры
     ShapeType currentShapeType; // Текущий тип фигуры

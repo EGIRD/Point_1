@@ -5,14 +5,18 @@
 
 class Star : public Polygon {
 public:
-    Star(const QPoint &center, int outerRadius, int innerRadius, int numPoints, const QColor &color);
-    void draw(QPainter &painter) override;
+    Star(const QPoint& center, int outerRadius, int innerRadius,
+         int numPoints, double startAngle = 0.0, const QColor& color = Qt::black);
 
-private:
+protected:
+    virtual void calculatePoints();
+
     QPoint center;
     int outerRadius;
     int innerRadius;
     int numPoints;
+    double startAngle; // Угол поворота (0 - верхняя точка горизонтальна)
 };
+
 
 #endif // STAR_H

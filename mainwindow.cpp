@@ -6,9 +6,11 @@
 #include "square.h"
 #include "rhombus.h"
 #include "triangle.h"
+#include "fivestar.h"
 #include "hexagon.h"
 #include "octagon.h"
-#include "star.h"
+#include "hexstar.h"
+#include "octstar.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -25,16 +27,18 @@ MainWindow::MainWindow(QWidget *parent)
     shapeComboBox->addItem("Ромб");
     shapeComboBox->addItem("Шестиугольник");
     shapeComboBox->addItem("Восьмиугольник");
-    shapeComboBox->addItem("Звезда");
     shapeComboBox->addItem("Треугольник");
     shapeComboBox->addItem("Круг");
-    shapeComboBox->setFixedSize(130,40);
+    shapeComboBox->addItem("5-конечная звезда");
+    shapeComboBox->addItem("6-конечная звезда");
+    shapeComboBox->addItem("8-конечная звезда");
+    shapeComboBox->setFixedSize(130, 40);
 
     clearButton = new QPushButton("Очистить", this);
-    clearButton->setFixedSize(130,40);
+    clearButton->setFixedSize(130, 40);
 
     colorButton = new QPushButton("Палитра", this);
-    colorButton->setFixedSize(130,40);
+    colorButton->setFixedSize(130, 40);
 
     // Создаем layout для кнопок
     QVBoxLayout *buttonLayout = new QVBoxLayout();
@@ -49,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(centralWidget);
 
     // Подключение кнопок к слотам
-    connect(shapeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),this,&MainWindow::onShapeSelected);
+    connect(shapeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &MainWindow::onShapeSelected);
     connect(clearButton, &QPushButton::clicked, this, &MainWindow::clearShapes);
     connect(colorButton, &QPushButton::clicked, this, &MainWindow::selectColor);
 }
@@ -80,27 +84,33 @@ void MainWindow::onShapeSelected(int index) {
         currentShapeType = OctagonShape; // Восьмиугольник
         break;
     case 5:
-        currentShapeType = StarShape; // Звезда
-        break;
-    case 6:
         currentShapeType = TriangleShape; // Треугольник
         break;
-    case 7:
+    case 6:
         currentShapeType = CircleShape; // Круг
+        break;
+    case 7:
+        currentShapeType = FiveStarShape; // Круг
+        break;
+    case 8:
+        currentShapeType = HexStarShape; // 6-конечная звезда
+        break;
+    case 9:
+        currentShapeType = OctStarShape; // 8-конечная звезда
         break;
     }
 }
 
-void MainWindow::clearShapes(){
-    for(auto shape : shapes){
+void MainWindow::clearShapes() {
+    for (auto shape : shapes) {
         delete shape;
     }
     shapes.clear();
     update();
 }
 
-void MainWindow::selectColor(){
-    QColor color = QColorDialog::getColor(currentColor,this, "Выберите цвет");
+void MainWindow::selectColor() {
+    QColor color = QColorDialog::getColor(currentColor, this, "Выберите цвет");
     if (color.isValid()) {
         currentColor = color;
     }
@@ -145,28 +155,40 @@ Shape* MainWindow::createShape(const QPoint &center, int width, int height, int 
     switch (currentShapeType) {
     case RectangleShape:
         return new Rectangle(startPoint, endPoint, currentColor);
-    case SquareShape:
-        return new Square(startPoint, sideLength, currentColor);
+    case SquareShape: {
+        int radius = qMax(abs(endPoint.x() - center.x()), abs(endPoint.y() - center.y()));
+        return new Square(center, radius * 2, currentColor);
+    }
     case RhombusShape:
         return new Rhombus(center, width, height, currentColor);
     case TriangleShape: {
         QPoint topPoint(startPoint.x(), startPoint.y()); // Верхняя точка
-        return  new Triangle(topPoint, QPoint(2 * startPoint.x() -  endPoint.x(), endPoint.y()), QPoint(endPoint.x(), endPoint.y()), currentColor);
+        return new Triangle(topPoint, QPoint(2 * startPoint.x() - endPoint.x(), endPoint.y()), QPoint(endPoint.x(), endPoint.y()), currentColor);
     }
     case CircleShape: {
         int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
         return new Circle(startPoint, radius, currentColor);
     }
     case HexagonShape: {
-         int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
         return new Hexagon(startPoint, radius, currentColor);
     }
     case OctagonShape: {
         int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
         return new Octagon(startPoint, radius, currentColor);
     }
-    case StarShape:
-        return new Star(center, sideLength / 2, sideLength / 4, 5, currentColor); // 5-конечная звезда
+    case FiveStarShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new FiveStar(startPoint, radius, currentColor);
+    }
+    case HexStarShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new HexStar(startPoint, radius, currentColor); // 6-конечная звезда
+    }
+    case OctStarShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new OctStar(startPoint, radius,  currentColor); // 8-конечная звезда
+    }
     default:
         return nullptr;
     }
@@ -192,15 +214,17 @@ void MainWindow::paintEvent(QPaintEvent *event) {
         case RectangleShape:
             tempShape = new Rectangle(startPoint, endPoint, currentColor);
             break;
-        case SquareShape:
-            tempShape = new Square(startPoint, qMin(width, height), currentColor);
+        case SquareShape: {
+            int radius = qMax(abs(endPoint.x() - center.x()), abs(endPoint.y() - center.y()));
+            tempShape = new Square(center, radius * 2, currentColor);
             break;
+        }
         case RhombusShape:
             tempShape = new Rhombus(center, width, height, currentColor);
             break;
         case TriangleShape: {
             QPoint topPoint(startPoint.x(), startPoint.y()); // Верхняя точка
-            tempShape =  new Triangle(topPoint, QPoint(2 * startPoint.x() -  endPoint.x(), endPoint.y()), QPoint(endPoint.x(), endPoint.y()), currentColor);
+            tempShape = new Triangle(topPoint, QPoint(2 * startPoint.x() - endPoint.x(), endPoint.y()), QPoint(endPoint.x(), endPoint.y()), currentColor);
             break;
         }
         case CircleShape: {
@@ -209,17 +233,30 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             break;
         }
         case HexagonShape: {
+            //tempShape = new HexStar(center, qMin(width, height) / 2, currentColor);
             int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
             tempShape = new Hexagon(startPoint, radius, currentColor);
             break;
         }
         case OctagonShape: {
+            //tempShape = new OctStar(center, qMin(width, height) / 2, currentColor);
             int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
             tempShape = new Octagon(startPoint, radius, currentColor);
             break;
         }
-        case StarShape:
-            tempShape = new Star(center, qMin(width, height) / 2, qMin(width, height) / 4, 5, currentColor);
+        case FiveStarShape: {
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new FiveStar(startPoint, radius,  currentColor);
+            break;
+        }
+        case HexStarShape: {
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new HexStar(startPoint,radius, currentColor);
+            break;
+        }
+        case OctStarShape:
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new OctStar(startPoint, radius, currentColor);
             break;
         }
 

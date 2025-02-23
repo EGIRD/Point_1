@@ -53,10 +53,13 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../../circle.cpp \
+		../../fivestar.cpp \
 		../../hexagon.cpp \
+		../../hexstar.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp \
 		../../octagon.cpp \
+		../../octstar.cpp \
 		../../polygon.cpp \
 		../../quadrilateral.cpp \
 		../../rectangle.cpp \
@@ -66,10 +69,13 @@ SOURCES       = ../../circle.cpp \
 		../../star.cpp \
 		../../triangle.cpp moc_mainwindow.cpp
 OBJECTS       = circle.o \
+		fivestar.o \
 		hexagon.o \
+		hexstar.o \
 		main.o \
 		mainwindow.o \
 		octagon.o \
+		octstar.o \
 		polygon.o \
 		quadrilateral.o \
 		rectangle.o \
@@ -146,9 +152,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/lex.prf \
 		../../../../Irg.pro ../../circle.h \
+		../../fivestar.h \
 		../../hexagon.h \
+		../../hexstar.h \
 		../../mainwindow.h \
 		../../octagon.h \
+		../../octstar.h \
 		../../polygon.h \
 		../../quadrilateral.h \
 		../../rectangle.h \
@@ -158,10 +167,13 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_pre.prf \
 		../../square.h \
 		../../star.h \
 		../../triangle.h ../../circle.cpp \
+		../../fivestar.cpp \
 		../../hexagon.cpp \
+		../../hexstar.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp \
 		../../octagon.cpp \
+		../../octstar.cpp \
 		../../polygon.cpp \
 		../../quadrilateral.cpp \
 		../../rectangle.cpp \
@@ -337,8 +349,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../circle.h ../../hexagon.h ../../mainwindow.h ../../octagon.h ../../polygon.h ../../quadrilateral.h ../../rectangle.h ../../regularpolygon.h ../../rhombus.h ../../shape.h ../../square.h ../../star.h ../../triangle.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../circle.cpp ../../hexagon.cpp ../../main.cpp ../../mainwindow.cpp ../../octagon.cpp ../../polygon.cpp ../../quadrilateral.cpp ../../rectangle.cpp ../../regularpolygon.cpp ../../rhombus.cpp ../../square.cpp ../../star.cpp ../../triangle.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../circle.h ../../fivestar.h ../../hexagon.h ../../hexstar.h ../../mainwindow.h ../../octagon.h ../../octstar.h ../../polygon.h ../../quadrilateral.h ../../rectangle.h ../../regularpolygon.h ../../rhombus.h ../../shape.h ../../square.h ../../star.h ../../triangle.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../circle.cpp ../../fivestar.cpp ../../hexagon.cpp ../../hexstar.cpp ../../main.cpp ../../mainwindow.cpp ../../octagon.cpp ../../octstar.cpp ../../polygon.cpp ../../quadrilateral.cpp ../../rectangle.cpp ../../regularpolygon.cpp ../../rhombus.cpp ../../square.cpp ../../star.cpp ../../triangle.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../mainwindow.ui $(DISTDIR)/
 
 
@@ -405,11 +417,23 @@ circle.o: ../../circle.cpp ../../circle.h \
 		../../shape.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o circle.o ../../circle.cpp
 
+fivestar.o: ../../fivestar.cpp ../../fivestar.h \
+		../../star.h \
+		../../polygon.h \
+		../../shape.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o fivestar.o ../../fivestar.cpp
+
 hexagon.o: ../../hexagon.cpp ../../hexagon.h \
 		../../regularpolygon.h \
 		../../polygon.h \
 		../../shape.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o hexagon.o ../../hexagon.cpp
+
+hexstar.o: ../../hexstar.cpp ../../hexstar.h \
+		../../star.h \
+		../../polygon.h \
+		../../shape.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o hexstar.o ../../hexstar.cpp
 
 main.o: ../../main.cpp ../../mainwindow.h \
 		../../shape.h
@@ -425,10 +449,13 @@ mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		../../square.h \
 		../../rhombus.h \
 		../../triangle.h \
+		../../fivestar.h \
+		../../star.h \
 		../../hexagon.h \
 		../../regularpolygon.h \
 		../../octagon.h \
-		../../star.h
+		../../hexstar.h \
+		../../octstar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../../mainwindow.cpp
 
 octagon.o: ../../octagon.cpp ../../octagon.h \
@@ -436,6 +463,12 @@ octagon.o: ../../octagon.cpp ../../octagon.h \
 		../../polygon.h \
 		../../shape.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o octagon.o ../../octagon.cpp
+
+octstar.o: ../../octstar.cpp ../../octstar.h \
+		../../star.h \
+		../../polygon.h \
+		../../shape.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o octstar.o ../../octstar.cpp
 
 polygon.o: ../../polygon.cpp ../../polygon.h \
 		../../shape.h
@@ -458,7 +491,6 @@ regularpolygon.o: ../../regularpolygon.cpp ../../regularpolygon.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o regularpolygon.o ../../regularpolygon.cpp
 
 rhombus.o: ../../rhombus.cpp ../../rhombus.h \
-		../../quadrilateral.h \
 		../../polygon.h \
 		../../shape.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rhombus.o ../../rhombus.cpp

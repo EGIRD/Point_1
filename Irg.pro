@@ -10,10 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     circle.cpp \
+    fivestar.cpp \
     hexagon.cpp \
+    hexstar.cpp \
     main.cpp \
     mainwindow.cpp \
     octagon.cpp \
+    octstar.cpp \
     polygon.cpp \
     quadrilateral.cpp \
     rectangle.cpp \
@@ -25,9 +28,12 @@ SOURCES += \
 
 HEADERS += \
     circle.h \
+    fivestar.h \
     hexagon.h \
+    hexstar.h \
     mainwindow.h \
     octagon.h \
+    octstar.h \
     polygon.h \
     quadrilateral.h \
     rectangle.h \
