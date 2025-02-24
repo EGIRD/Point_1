@@ -1,23 +1,26 @@
-// #ifndef STAR_H
-// #define STAR_H
+#ifndef STAR_H
+#define STAR_H
 
-// #include "polygon.h"
+#include "polygon.h"
+#include <cmath>
 
+class Star : public Polygon {
+public:
+    Star(const QPoint& center, int outerRadius, int innerRadius,
+         int numPoints, double startAngle = 0.0, const QColor& color = Qt::black);
 
-// class Star : public Polygon {
-// public:
-//     Star(const QPoint& center, int outerRadius, int innerRadius,
-//          int numPoints, double startAngle = 0.0, const QColor& color = Qt::black);
+    double area() const override; // Площадь звезды
+    double perimeter() const override; // Периметр звезды
+    QPoint centerOfMass() const override; // Центр масс звезды
 
-// protected:
-//     virtual void calculatePoints();
+protected:
+    void calculatePoints(); // Вычисление вершин звезды
 
-//     QPoint center;
-//     int outerRadius;
-//     int innerRadius;
-//     int numPoints;
-//     double startAngle; // Угол поворота (0 - верхняя точка горизонтальна)
-// };
+    QPoint center; // Центр звезды
+    int outerRadius; // Внешний радиус
+    int innerRadius; // Внутренний радиус
+    int numPoints; // Количество вершин
+    double startAngle; // Угол поворота
+};
 
-
-// #endif // STAR_H
+#endif // STAR_H

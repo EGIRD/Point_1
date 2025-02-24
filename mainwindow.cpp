@@ -6,11 +6,11 @@
 #include "square.h"
 #include "rhombus.h"
 #include "triangle.h"
-//#include "fivestar.h"
+#include "fivestar.h"
 #include "hexagon.h"
 #include "octagon.h"
-//#include "hexstar.h"
-//#include "octstar.h"
+#include "hexstar.h"
+#include "octstar.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -190,18 +190,18 @@ Shape* MainWindow::createShape(const QPoint &center, int width, int height, int 
         int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
         return new Octagon(startPoint, radius, currentColor);
     }
-    // case FiveStarShape: {
-    //     int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
-    //     return new FiveStar(startPoint, radius, currentColor);
-    // }
-    // case HexStarShape: {
-    //     int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
-    //     return new HexStar(startPoint, radius, currentColor); // 6-конечная звезда
-    // }
-    // case OctStarShape: {
-    //     int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
-    //     return new OctStar(startPoint, radius,  currentColor); // 8-конечная звезда
-    // }
+    case FiveStarShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+         return new FiveStar(startPoint, radius, currentColor);
+     }
+    case HexStarShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new HexStar(startPoint, radius, currentColor); // 6-конечная звезда
+    }
+    case OctStarShape: {
+        int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+        return new OctStar(startPoint, radius,  currentColor); // 8-конечная звезда
+    }
     default:
         return nullptr;
     }
@@ -275,21 +275,21 @@ void MainWindow::paintEvent(QPaintEvent *event) {
             tempShape = new Octagon(startPoint, radius, currentColor);
             break;
         }
-        // case FiveStarShape: {
-        //     int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
-        //     tempShape = new FiveStar(startPoint, radius, currentColor);
-        //     break;
-        // }
-        // case HexStarShape: {
-        //     int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
-        //     tempShape = new HexStar(startPoint, radius, currentColor);
-        //     break;
-        // }
-        // case OctStarShape: {
-        //     int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
-        //     tempShape = new OctStar(startPoint, radius, currentColor);
-        //     break;
-        // }
+        case FiveStarShape: {
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new FiveStar(startPoint, radius, currentColor);
+            break;
+        }
+        case HexStarShape: {
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new HexStar(startPoint, radius, currentColor);
+            break;
+        }
+        case OctStarShape: {
+            int radius = static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+            tempShape = new OctStar(startPoint, radius, currentColor);
+            break;
+        }
         }
 
         if (tempShape) {

@@ -40,7 +40,6 @@ private slots:
 
 private:
     Shape* createShape(const QPoint &center, int width, int height, int sideLength);
-    //Shape* createShape(const QPoint &startPoint, const QPoint &endPoint);
 
 private:
     Ui::MainWindow *ui;
@@ -48,7 +47,7 @@ private:
     QPoint startPoint; // Начальная точка для рисования
     QPoint endPoint; // Конечная точка для рисования
     bool isDrawing; // Флаг для отслеживания рисования
-    bool showInfo;
+    bool showInfo; 
 
     enum ShapeType {
         RectangleShape,
