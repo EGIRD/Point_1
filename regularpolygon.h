@@ -6,7 +6,9 @@
 class RegularPolygon : public Polygon {
 public:
     RegularPolygon(const QPoint &center, int radius, int numSides, const QColor &color);
-    void draw(QPainter &painter) override;
+    double area() const override;
+    double perimeter() const override;
+    QPoint centerOfMass() const override;
 
 protected:
     QPoint center;

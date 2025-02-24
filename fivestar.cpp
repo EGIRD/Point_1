@@ -1,10 +1,17 @@
-#include "fivestar.h"
-#include <cmath>
+// #include "fivestar.h"
+// #include <cmath>
 
-FiveStar::FiveStar(const QPoint& center, int radius, const QColor& color)
-    : Star(center,
-           radius,        // outerRadius
-           radius * 0.4,  // innerRadius (можно регулировать пропорции)
-           5,             // numPoints (5-конечная звезда)
-           -M_PI_2)       // startAngle (-90 градусов для горизонтальной верхней точки)
-{}
+// FiveStar::FiveStar(const QPoint& center, int radius, const QColor& color)
+//     : Star(center, radius, radius * 0.4, 5, -M_PI_2, color) {}
+
+// double FiveStar::area() const {
+//     return (5 * outerRadius * innerRadius * sin(M_PI / 5)) / 2;
+// }
+
+// double FiveStar::perimeter() const {
+//     return 10 * outerRadius * sin(M_PI / 5);
+// }
+
+// QPoint FiveStar::centerOfMass() const {
+//     return center;
+// }

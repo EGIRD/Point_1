@@ -6,7 +6,10 @@
 class Triangle : public Polygon {
 public:
     Triangle(const QPoint &p1, const QPoint &p2, const QPoint &p3, const QColor &color);
-    void draw(QPainter &painter) override; // Переопределение отрисовки
+    void draw(QPainter &painter) override;
+    double area() const override;
+    double perimeter() const override;
+    QPoint centerOfMass() const override;
 };
 
 #endif // TRIANGLE_H

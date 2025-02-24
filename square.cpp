@@ -3,7 +3,17 @@
 Square::Square(const QPoint &center, int sideLength, const QColor &color)
     : Rectangle(QPoint(center.x() - sideLength / 2, center.y() - sideLength / 2),
                 QPoint(center.x() + sideLength / 2, center.y() + sideLength / 2), color) {}
-void Square::draw(QPainter &painter) {
-    painter.setPen(color);
-    painter.drawPolygon(points.data(), points.size()); // Рисуем квадрат
+
+double Square::area() const {
+    int side = points[1].x() - points[0].x();
+    return side * side;
+}
+
+double Square::perimeter() const {
+    int side = points[1].x() - points[0].x();
+    return 4 * side;
+}
+
+QPoint Square::centerOfMass() const {
+    return QPoint((points[0].x() + points[2].x()) / 2, (points[0].y() + points[2].y()) / 2);
 }

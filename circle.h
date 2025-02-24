@@ -9,6 +9,9 @@ class Circle : public Shape {
 public:
     Circle(const QPoint &center, int radius, const QColor &color);
     void draw(QPainter &painter) override;
+    double area() const override;
+    double perimeter() const override;
+    QPoint centerOfMass() const override;
 
 private:
     QPoint center; // Центр круга

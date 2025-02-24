@@ -1,9 +1,17 @@
 #include "hexagon.h"
+#include <cmath>
 
 Hexagon::Hexagon(const QPoint &center, int radius, const QColor &color)
     : RegularPolygon(center, radius, 6, color) {}
 
- void Hexagon::draw(QPainter &painter) {
-    painter.setPen(color);
-    RegularPolygon::draw(painter); // Вызываем draw базового класса
+double Hexagon::area() const {
+    return (3 * sqrt(3) * radius * radius) / 2;
+}
+
+double Hexagon::perimeter() const {
+    return 6 * radius;
+}
+
+QPoint Hexagon::centerOfMass() const {
+    return center;
 }

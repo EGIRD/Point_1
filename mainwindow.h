@@ -36,10 +36,11 @@ private slots:
     void onShapeSelected(int index);//слот для выбора фигуры
     void clearShapes();
     void selectColor();
+    void toggleIngoDisplay();
 
 private:
- Shape* createShape(const QPoint &center, int width, int height, int sideLength);
- //Shape* createShape(const QPoint &startPoint, const QPoint &endPoint);
+    Shape* createShape(const QPoint &center, int width, int height, int sideLength);
+    //Shape* createShape(const QPoint &startPoint, const QPoint &endPoint);
 
 private:
     Ui::MainWindow *ui;
@@ -47,6 +48,7 @@ private:
     QPoint startPoint; // Начальная точка для рисования
     QPoint endPoint; // Конечная точка для рисования
     bool isDrawing; // Флаг для отслеживания рисования
+    bool showInfo;
 
     enum ShapeType {
         RectangleShape,
@@ -68,6 +70,7 @@ private:
     QComboBox *shapeComboBox;
     QPushButton *colorButton;
     QPushButton *clearButton;
+    QPushButton *infoButton;
 
 };
 #endif // MAINWINDOW_H

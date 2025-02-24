@@ -6,7 +6,9 @@
 class Rectangle : public Quadrilateral {
 public:
     Rectangle(const QPoint &topLeft, const QPoint &bottomRight, const QColor &color);
+    double area() const override;
+    double perimeter() const override;
+    QPoint centerOfMass() const override;
 };
-
 
 #endif // RECTANGLE_H

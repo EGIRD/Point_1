@@ -1,11 +1,14 @@
-#ifndef HEXSTAR_H
-#define HEXSTAR_H
+// #ifndef HEXSTAR_H
+// #define HEXSTAR_H
 
-#include "star.h"
+// #include "star.h"
 
+// class HexStar : public Star {
+// public:
+//     HexStar(const QPoint& center, int radius, const QColor& color);
+//     double area() const override;
+//     double perimeter() const override;
+//     QPoint centerOfMass() const override;
+// };
 
-class HexStar : public Star {
-public:
-    HexStar(const QPoint& center, int radius, const QColor& color = Qt::black);
-};
-#endif // HEXSTAR_H
+// #endif // HEXSTAR_H

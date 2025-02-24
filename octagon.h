@@ -6,7 +6,9 @@
 class Octagon : public RegularPolygon {
 public:
     Octagon(const QPoint &center, int radius, const QColor &color);
-    void draw(QPainter &painter) override;
+    double area() const override;
+    double perimeter() const override;
+    QPoint centerOfMass() const override;
 };
 
 #endif // OCTAGON_H
