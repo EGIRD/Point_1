@@ -17,3 +17,13 @@ double Square::perimeter() const {
 QPoint Square::centerOfMass() const {
     return QPoint((points[0].x() + points[2].x()) / 2, (points[0].y() + points[2].y()) / 2);
 }
+
+// square.cpp
+bool Square::contains(const QPoint &point) const {
+    return point.x() >= points[0].x() && point.x() <= points[2].x() &&
+           point.y() >= points[0].y() && point.y() <= points[2].y();
+}
+
+// QRect Square::boundingRect() const {
+//     return QRect(points[0], points[2]);
+// }

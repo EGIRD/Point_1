@@ -10,6 +10,8 @@ public:
     Polygon(const QColor &color);
     void addPoint(const QPoint &point); // Добавление точки
     void draw(QPainter &painter) override; // Отрисовка полигона
+     bool contains(const QPoint &point) const override;
+    // QRect boundingRect() const override;
 
 protected:
     QVector<QPoint> points; // Вектор точек

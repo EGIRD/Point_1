@@ -12,7 +12,8 @@ public:
     double area() const override;
     double perimeter() const override;
     QPoint centerOfMass() const override;
-
+     bool contains(const QPoint &point) const override;
+    // QRect boundingRect() const override;
 private:
     QPoint center; // Центр круга
     int radius; // Радиус круга

@@ -19,6 +19,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <cmath>
+#include <QRect>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -190,11 +191,31 @@ void MainWindow::toggleIngoDisplay() {
 }
 
 // Обработка нажатия мыши
+// mainwindow.cpp
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
+        for (int i = 0; i < shapes.size(); ++i) {
+            if (shapes[i]->contains(event->pos())) {
+                shapes[i]->selectedShape();
+                update(); // Перерисовка окна
+                return;
+            }
+        }
         startPoint = event->pos();
         isDrawing = true;
     }
+}
+
+void MainWindow::selectShape(const QPoint &point) {
+    for (int i = 0; i < shapes.size(); ++i) {
+        if (shapes[i]->contains(point)) {
+            shapes[i]->selectedShape();
+            update(); // Перерисовка окна
+            return;
+        }
+    }
+    selectedShapeIndex = -1; // Если ни одна фигура не выделена
+    update();
 }
 
 // Обработка движения мыши
@@ -225,6 +246,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 // Отрисовка фигур
+// mainwindow.cpp
 void MainWindow::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event);
     QPainter painter(this);

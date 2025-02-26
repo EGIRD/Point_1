@@ -12,6 +12,8 @@ public:
     double area() const override; // Площадь звезды
     double perimeter() const override; // Периметр звезды
     QPoint centerOfMass() const override; // Центр масс звезды
+     bool contains(const QPoint &point) const override;
+    // QRect boundingRect() const override;
 
 protected:
     void calculatePoints(); // Вычисление вершин звезды

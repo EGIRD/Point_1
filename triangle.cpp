@@ -32,3 +32,28 @@ QPoint Triangle::centerOfMass() const {
     int y = (points[0].y() + points[1].y() + points[2].y()) / 3;
     return QPoint(x, y);
 }
+
+// triangle.cpp
+bool Triangle::contains(const QPoint &point) const {
+    QPolygon polygon;
+    for (const QPoint &p : points) {
+        polygon << p;
+    }
+    return polygon.containsPoint(point, Qt::OddEvenFill);
+}
+
+// QRect Triangle::boundingRect() const {
+//     if (points.isEmpty()) return QRect();
+
+//     int minX = points[0].x(), maxX = points[0].x();
+//     int minY = points[0].y(), maxY = points[0].y();
+
+//     for (const QPoint &p : points) {
+//         if (p.x() < minX) minX = p.x();
+//         if (p.x() > maxX) maxX = p.x();
+//         if (p.y() < minY) minY = p.y();
+//         if (p.y() > maxY) maxY = p.y();
+//     }
+
+//     return QRect(minX, minY, maxX - minX, maxY - minY);
+// }

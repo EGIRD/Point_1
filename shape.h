@@ -13,6 +13,12 @@ public:
     virtual double perimeter() const = 0; // Периметр
     virtual QPoint centerOfMass() const = 0; // Центр масс
     virtual ~Shape() = default; // Виртуальный деструктор
+    virtual bool contains(const QPoint &point) const = 0;
+    // virtual QRect boundingRect() const = 0;
+    void selectedShape() {
+        color = Qt::blue; // Меняем цвет на зеленый
+    }
+
 
 protected:
     QColor color;

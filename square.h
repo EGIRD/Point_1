@@ -9,6 +9,8 @@ public:
     double area() const override;
     double perimeter() const override;
     QPoint centerOfMass() const override;
+    bool contains(const QPoint &point) const override;
+    // QRect boundingRect() const override;
 };
 
 #endif // SQUARE_H

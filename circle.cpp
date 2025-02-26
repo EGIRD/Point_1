@@ -21,3 +21,14 @@ double Circle::perimeter() const {
 QPoint Circle::centerOfMass() const {
     return center;
 }
+
+// // circle.cpp
+bool Circle::contains(const QPoint &point) const {
+    int dx = point.x() - center.x();
+    int dy = point.y() - center.y();
+    return (dx * dx + dy * dy) <= (radius * radius);
+}
+
+// QRect Circle::boundingRect() const {
+//     return QRect(center.x() - radius, center.y() - radius, 2 * radius, 2 * radius);
+// }

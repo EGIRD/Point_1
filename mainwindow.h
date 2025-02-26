@@ -68,6 +68,8 @@ private:
     bool isDrawing; // Флаг для отслеживания рисования
     bool showInfo; // Флаг для отображения информации о фигурах
 
+    int selectedShapeIndex = -1; // Индекс выделенной фигуры
+    void selectShape(const QPoint &point);
 
     ShapeType currentShapeType; // Текущий тип фигуры
     QColor currentColor; // Текущий цвет фигуры
