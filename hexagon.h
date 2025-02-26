@@ -9,6 +9,7 @@ public:
     double area() const override;
     double perimeter() const override;
     QPoint centerOfMass() const override;
+    void move(int dx, int dy) override;
 };
 
 #endif // HEXAGON_H

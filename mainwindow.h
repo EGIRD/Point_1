@@ -51,6 +51,10 @@ private slots:
     void clearShapes(); // Очистка всех фигур
     void selectColor(); // Выбор цвета
     void toggleIngoDisplay(); // Переключение отображения информации
+    void moveShapeUp();
+    void moveShapeDown();
+    void moveShapeLeft();
+    void moveShapeRight();
 
 private:
     // Метод для создания фигуры

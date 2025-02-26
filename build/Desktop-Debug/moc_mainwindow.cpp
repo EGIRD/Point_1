@@ -26,7 +26,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 namespace {
 struct qt_meta_stringdata_MainWindow_t {
-    uint offsetsAndSizes[14];
+    uint offsetsAndSizes[22];
     char stringdata0[11];
     char stringdata1[16];
     char stringdata2[1];
@@ -34,6 +34,10 @@ struct qt_meta_stringdata_MainWindow_t {
     char stringdata4[12];
     char stringdata5[12];
     char stringdata6[18];
+    char stringdata7[12];
+    char stringdata8[14];
+    char stringdata9[14];
+    char stringdata10[15];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_MainWindow_t::offsetsAndSizes) + ofs), len 
@@ -45,7 +49,11 @@ Q_CONSTINIT static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_Main
         QT_MOC_LITERAL(28, 5),  // "index"
         QT_MOC_LITERAL(34, 11),  // "clearShapes"
         QT_MOC_LITERAL(46, 11),  // "selectColor"
-        QT_MOC_LITERAL(58, 17)   // "toggleIngoDisplay"
+        QT_MOC_LITERAL(58, 17),  // "toggleIngoDisplay"
+        QT_MOC_LITERAL(76, 11),  // "moveShapeUp"
+        QT_MOC_LITERAL(88, 13),  // "moveShapeDown"
+        QT_MOC_LITERAL(102, 13),  // "moveShapeLeft"
+        QT_MOC_LITERAL(116, 14)   // "moveShapeRight"
     },
     "MainWindow",
     "onShapeSelected",
@@ -53,7 +61,11 @@ Q_CONSTINIT static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_Main
     "index",
     "clearShapes",
     "selectColor",
-    "toggleIngoDisplay"
+    "toggleIngoDisplay",
+    "moveShapeUp",
+    "moveShapeDown",
+    "moveShapeLeft",
+    "moveShapeRight"
 };
 #undef QT_MOC_LITERAL
 } // unnamed namespace
@@ -64,7 +76,7 @@ Q_CONSTINIT static const uint qt_meta_data_MainWindow[] = {
       10,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -72,13 +84,21 @@ Q_CONSTINIT static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   38,    2, 0x08,    1 /* Private */,
-       4,    0,   41,    2, 0x08,    3 /* Private */,
-       5,    0,   42,    2, 0x08,    4 /* Private */,
-       6,    0,   43,    2, 0x08,    5 /* Private */,
+       1,    1,   62,    2, 0x08,    1 /* Private */,
+       4,    0,   65,    2, 0x08,    3 /* Private */,
+       5,    0,   66,    2, 0x08,    4 /* Private */,
+       6,    0,   67,    2, 0x08,    5 /* Private */,
+       7,    0,   68,    2, 0x08,    6 /* Private */,
+       8,    0,   69,    2, 0x08,    7 /* Private */,
+       9,    0,   70,    2, 0x08,    8 /* Private */,
+      10,    0,   71,    2, 0x08,    9 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -103,6 +123,14 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         // method 'selectColor'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'toggleIngoDisplay'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'moveShapeUp'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'moveShapeDown'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'moveShapeLeft'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'moveShapeRight'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -118,6 +146,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->clearShapes(); break;
         case 2: _t->selectColor(); break;
         case 3: _t->toggleIngoDisplay(); break;
+        case 4: _t->moveShapeUp(); break;
+        case 5: _t->moveShapeDown(); break;
+        case 6: _t->moveShapeLeft(); break;
+        case 7: _t->moveShapeRight(); break;
         default: ;
         }
     }
@@ -142,13 +174,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 8;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 8)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 4;
+        _id -= 8;
     }
     return _id;
 }

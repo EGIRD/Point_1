@@ -27,12 +27,16 @@ QPoint Rectangle::centerOfMass() const {
     return QPoint(x, y);
 }
 
-// rectangle.cpp
 bool Rectangle::contains(const QPoint &point) const {
     return point.x() >= points[0].x() && point.x() <= points[2].x() &&
            point.y() >= points[0].y() && point.y() <= points[2].y();
 }
 
-// QRect Rectangle::boundingRect() const {
-//     return QRect(points[0], points[2]);
-// }
+void Rectangle::move(int dx, int dy) {
+    for (QPoint &point : points) {
+        point.setX(point.x() + dx);
+        point.setY(point.y() + dy);
+    }
+}
+
+

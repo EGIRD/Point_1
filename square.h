@@ -10,7 +10,7 @@ public:
     double perimeter() const override;
     QPoint centerOfMass() const override;
     bool contains(const QPoint &point) const override;
-    // QRect boundingRect() const override;
+     void move(int dx, int dy) override;
 };
 
 #endif // SQUARE_H

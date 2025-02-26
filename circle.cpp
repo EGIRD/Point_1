@@ -29,6 +29,11 @@ bool Circle::contains(const QPoint &point) const {
     return (dx * dx + dy * dy) <= (radius * radius);
 }
 
+void Circle::move(int dx, int dy) {
+    center.setX(center.x() + dx);
+    center.setY(center.y() + dy);
+}
+
 // QRect Circle::boundingRect() const {
 //     return QRect(center.x() - radius, center.y() - radius, 2 * radius, 2 * radius);
 // }

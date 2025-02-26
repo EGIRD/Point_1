@@ -28,7 +28,6 @@ QPoint Rhombus::centerOfMass() const {
     return QPoint((points[0].x() + points[2].x()) / 2, (points[0].y() + points[2].y()) / 2);
 }
 
-// rhombus.cpp
 bool Rhombus::contains(const QPoint &point) const {
     QPoint center = centerOfMass();
     int dx = abs(point.x() - center.x());
@@ -39,6 +38,9 @@ bool Rhombus::contains(const QPoint &point) const {
     return (dx * halfHeight + dy * halfWidth) <= (halfWidth * halfHeight);
 }
 
-// QRect Rhombus::boundingRect() const {
-//     return QRect(points[3].x(), points[0].y(), points[1].x() - points[3].x(), points[2].y() - points[0].y());
-// }
+void Rhombus::move(int dx, int dy) {
+    for (QPoint &point : points) {
+        point.setX(point.x() + dx);
+        point.setY(point.y() + dy);
+    }
+}

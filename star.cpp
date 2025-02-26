@@ -49,7 +49,6 @@ double Star::perimeter() const {
 }
 
 QPoint Star::centerOfMass() const {
-    // Центр масс — среднее арифметическое всех вершин
     int sumX = 0, sumY = 0;
     for (const QPoint& point : points) {
         sumX += point.x();
@@ -58,7 +57,6 @@ QPoint Star::centerOfMass() const {
     return QPoint(sumX / points.size(), sumY / points.size());
 }
 
-// star.cpp
 bool Star::contains(const QPoint &point) const {
     QPolygon polygon;
     for (const QPoint &p : points) {
@@ -67,16 +65,9 @@ bool Star::contains(const QPoint &point) const {
     return polygon.containsPoint(point, Qt::OddEvenFill);
 }
 
-// QRect Star::boundingRect() const {
-//     int minX = points[0].x(), maxX = points[0].x();
-//     int minY = points[0].y(), maxY = points[0].y();
-
-//     for (const QPoint &p : points) {
-//         if (p.x() < minX) minX = p.x();
-//         if (p.x() > maxX) maxX = p.x();
-//         if (p.y() < minY) minY = p.y();
-//         if (p.y() > maxY) maxY = p.y();
-//     }
-
-//     return QRect(minX, minY, maxX - minX, maxY - minY);
-// }
+void Star::move(int dx, int dy) {
+    center.setX(center.x() + dx);
+    center.setY(center.y() + dy);
+    points.clear(); // Очищаем точки
+    calculatePoints(); // Пересчитываем вершины
+}

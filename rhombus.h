@@ -10,8 +10,8 @@ public:
     double area() const override;
     double perimeter() const override;
     QPoint centerOfMass() const override;
-     bool contains(const QPoint &point) const override;
-    // QRect boundingRect() const override;
+    bool contains(const QPoint &point) const override;
+    void move(int dx, int dy) override;
 };
 
 #endif // RHOMBUS_H

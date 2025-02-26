@@ -8,7 +8,7 @@
 #include "triangle.h"
 #include "fivestar.h"
 #include "hexagon.h"
-#include "octagon.h"
+//#include "octagon.h"
 #include "hexstar.h"
 #include "octstar.h"
 
@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     , showInfo(false)
     , currentShapeType(RectangleShape)
     , currentColor(Qt::black)
+    , selectedShapeIndex(-1)
 {
     ui->setupUi(this);
 
@@ -64,9 +65,41 @@ MainWindow::MainWindow(QWidget *parent)
     buttonLayout->addWidget(infoButton);
     buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignRight);
 
+    // Создание ползунка и кнопок-стрелок
+    QSlider *slider = new QSlider(Qt::Horizontal, this);
+    slider->setRange(0, 100); // Диапазон значений
+    slider->setValue(50); // Начальное значение
+    slider->setFixedSize(200, 30); // Размер ползунка
+
+    QPushButton *upButton = new QPushButton("↑", this);
+    QPushButton *downButton = new QPushButton("↓", this);
+    QPushButton *leftButton = new QPushButton("←", this);
+    QPushButton *rightButton = new QPushButton("→", this);
+
+    // Устанавливаем размер кнопок-стрелок
+    upButton->setFixedSize(40, 40);
+    downButton->setFixedSize(40, 40);
+    leftButton->setFixedSize(40, 40);
+    rightButton->setFixedSize(40, 40);
+
+    // Создание горизонтального layout для ползунка и кнопок-стрелок
+    QHBoxLayout *bottomLayout = new QHBoxLayout();
+    bottomLayout->addWidget(leftButton);
+    bottomLayout->addWidget(upButton);
+    bottomLayout->addWidget(downButton);
+    bottomLayout->addWidget(rightButton);
+    bottomLayout->addWidget(slider); // Добавляем ползунок
+    bottomLayout->setAlignment(Qt::AlignBottom); // Выравнивание по нижнему краю
+
+    // Основной вертикальный layout
+    QVBoxLayout *mainLayout = new QVBoxLayout();
+    mainLayout->addLayout(buttonLayout); // Добавляем кнопки справа
+    mainLayout->addStretch(); // Растягиваем пространство между кнопками и нижним layout
+    mainLayout->addLayout(bottomLayout); // Добавляем нижний layout с ползунком и стрелками
+
     // Установка layout в центральный виджет
     QWidget *centralWidget = new QWidget(this);
-    centralWidget->setLayout(buttonLayout);
+    centralWidget->setLayout(mainLayout);
     setCentralWidget(centralWidget);
 
     // Подключение сигналов к слотам
@@ -74,6 +107,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(clearButton, &QPushButton::clicked, this, &MainWindow::clearShapes);
     connect(colorButton, &QPushButton::clicked, this, &MainWindow::selectColor);
     connect(infoButton, &QPushButton::clicked, this, &MainWindow::toggleIngoDisplay);
+
+    // Подключение сигналов от кнопок-стрелок
+    connect(upButton, &QPushButton::clicked, this, &MainWindow::moveShapeUp);
+    connect(downButton, &QPushButton::clicked, this, &MainWindow::moveShapeDown);
+    connect(leftButton, &QPushButton::clicked, this, &MainWindow::moveShapeLeft);
+    connect(rightButton, &QPushButton::clicked, this, &MainWindow::moveShapeRight);
+    // Подключение сигнала от ползунка
+    connect(slider, &QSlider::valueChanged, this, [](int value) { qDebug() << "Значение ползунка:" << value; });
 }
 
 MainWindow::~MainWindow()
@@ -96,8 +137,8 @@ Shape* MainWindow::createShapeBasedOnRadius(MainWindow::ShapeType type, const QP
         return new Circle(center, radius, currentColor);
     case HexagonShape:
         return new Hexagon(center, radius, currentColor);
-    case OctagonShape:
-        return new Octagon(center, radius, currentColor);
+    // case OctagonShape:
+    //     return new Octagon(center, radius, currentColor);
     case FiveStarShape:
         return new FiveStar(center, radius, currentColor);
     case HexStarShape:
@@ -146,8 +187,8 @@ void MainWindow::onShapeSelected(int index) {
     case 3:
         currentShapeType = HexagonShape;
         break;
-    case 4:
-        currentShapeType = OctagonShape;
+    // case 4:
+    //     currentShapeType = OctagonShape;
         break;
     case 5:
         currentShapeType = TriangleShape;
@@ -190,17 +231,54 @@ void MainWindow::toggleIngoDisplay() {
     update();
 }
 
+void MainWindow::moveShapeUp() {
+    if (selectedShapeIndex != -1) {
+        qDebug() << "Перемещение фигуры вверх";
+        Shape *shape = shapes[selectedShapeIndex];
+        shape->move(0, -10); // Перемещаем фигуру вверх на 10 пикселей
+        update(); // Перерисовываем окно
+    } else {
+        qDebug() << "Фигура не выделена";
+    }
+}
+void MainWindow::moveShapeDown() {
+    if (selectedShapeIndex != -1) {
+        Shape *shape = shapes[selectedShapeIndex];
+        shape->move(0, 10); // Перемещаем фигуру вниз на 10 пикселей
+        update(); // Перерисовываем окно
+    }
+}
+
+void MainWindow::moveShapeLeft() {
+    if (selectedShapeIndex != -1) {
+        Shape *shape = shapes[selectedShapeIndex];
+        shape->move(-10, 0); // Перемещаем фигуру влево на 10 пикселей
+        update(); // Перерисовываем окно
+    }
+}
+
+void MainWindow::moveShapeRight() {
+    if (selectedShapeIndex != -1) {
+        Shape *shape = shapes[selectedShapeIndex];
+        shape->move(10, 0); // Перемещаем фигуру вправо на 10 пикселей
+        update(); // Перерисовываем окно
+    }
+}
+
 // Обработка нажатия мыши
 // mainwindow.cpp
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         for (int i = 0; i < shapes.size(); ++i) {
             if (shapes[i]->contains(event->pos())) {
+                qDebug() << "Фигура выделена, индекс:" << i;
                 shapes[i]->selectedShape();
+                selectedShapeIndex = i; // Сохраняем индекс выделенной фигуры
                 update(); // Перерисовка окна
                 return;
             }
         }
+        qDebug() << "Фигура не выделена (не найдена под курсором)";
         startPoint = event->pos();
         isDrawing = true;
     }
