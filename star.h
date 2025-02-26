@@ -13,7 +13,9 @@ public:
     double perimeter() const override; // Периметр звезды
     QPoint centerOfMass() const override; // Центр масс звезды
     bool contains(const QPoint &point) const override;
-     void move(int dx, int dy) override;
+    void move(int dx, int dy) override;
+    void scale(double factor) override;
+
 
 protected:
     void calculatePoints(); // Вычисление вершин звезды

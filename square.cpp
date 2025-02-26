@@ -29,3 +29,12 @@ void Square::move(int dx, int dy) {
         point.setY(point.y() + dy);
     }
 }
+
+void Square::scale(double factor) {
+    QPoint center = centerOfMass(); // Центр квадрата
+    for (QPoint &point : points) {
+        // Масштабируем каждую точку относительно центра
+        point.setX(center.x() + (point.x() - center.x()) * factor);
+        point.setY(center.y() + (point.y() - center.y()) * factor);
+    }
+}

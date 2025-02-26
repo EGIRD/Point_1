@@ -71,3 +71,11 @@ void Star::move(int dx, int dy) {
     points.clear(); // Очищаем точки
     calculatePoints(); // Пересчитываем вершины
 }
+
+void Star::scale(double factor) {
+    outerRadius *= factor; // Масштабируем внешний радиус
+    innerRadius *= factor; // Масштабируем внутренний радиус
+    points.clear(); // Очищаем вершины
+    calculatePoints(); // Пересчитываем вершины
+}
+

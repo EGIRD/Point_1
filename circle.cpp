@@ -27,7 +27,6 @@ QPoint Circle::centerOfMass() const {
     return center;
 }
 
-// // circle.cpp
 bool Circle::contains(const QPoint &point) const {
     int dx = point.x() - center.x();
     int dy = point.y() - center.y();
@@ -39,6 +38,6 @@ void Circle::move(int dx, int dy) {
     center.setY(center.y() + dy);
 }
 
-// QRect Circle::boundingRect() const {
-//     return QRect(center.x() - radius, center.y() - radius, 2 * radius, 2 * radius);
-// }
+void Circle::scale(double factor) {
+    radius *= factor; // Масштабируем радиус
+}

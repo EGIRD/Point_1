@@ -39,4 +39,12 @@ void Rectangle::move(int dx, int dy) {
     }
 }
 
+void Rectangle::scale(double factor) {
+    QPoint center = centerOfMass(); // Центр прямоугольника
+    for (QPoint &point : points) {
+        // Масштабируем каждую точку относительно центра
+        point.setX(center.x() + (point.x() - center.x()) * factor);
+        point.setY(center.y() + (point.y() - center.y()) * factor);
+    }
+}
 

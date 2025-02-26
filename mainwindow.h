@@ -55,6 +55,7 @@ private slots:
     void moveShapeDown();
     void moveShapeLeft();
     void moveShapeRight();
+    void onSliderValueChanged(int value);
 
 private:
     // Метод для создания фигуры

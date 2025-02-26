@@ -7,8 +7,8 @@
 #include "rhombus.h"
 #include "triangle.h"
 #include "fivestar.h"
-#include "hexagon.h"
-#include "octagon.h"
+//#include "hexagon.h"
+//#include "octagon.h"
 #include "hexstar.h"
 #include "octstar.h"
 
@@ -67,8 +67,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Создание ползунка и кнопок-стрелок
     QSlider *slider = new QSlider(Qt::Horizontal, this);
-    slider->setRange(0, 100); // Диапазон значений
-    slider->setValue(50); // Начальное значение
+    slider->setRange(10, 200); // Диапазон значений
+    slider->setValue(100); // Начальное значение
     slider->setFixedSize(200, 30); // Размер ползунка
 
     QPushButton *upButton = new QPushButton("↑", this);
@@ -114,7 +114,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(leftButton, &QPushButton::clicked, this, &MainWindow::moveShapeLeft);
     connect(rightButton, &QPushButton::clicked, this, &MainWindow::moveShapeRight);
     // Подключение сигнала от ползунка
-    connect(slider, &QSlider::valueChanged, this, [](int value) { qDebug() << "Значение ползунка:" << value; });
+    connect(slider, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -137,10 +139,10 @@ Shape* MainWindow::createShapeBasedOnRadius(MainWindow::ShapeType type, const QP
     switch (type) {
     case CircleShape:
         return new Circle(center, radius, currentColor);
-    case HexagonShape:
-        return new Hexagon(center, radius, currentColor);
-    case OctagonShape:
-        return new Octagon(center, radius, currentColor);
+    // case HexagonShape:
+    //     return new Hexagon(center, radius, currentColor);
+    // case OctagonShape:
+    //     return new Octagon(center, radius, currentColor);
     case FiveStarShape:
         return new FiveStar(center, radius, currentColor);
     case HexStarShape:
@@ -270,6 +272,15 @@ void MainWindow::moveShapeRight() {
     if (selectedShapeIndex != -1) {
         Shape *shape = shapes[selectedShapeIndex];
         shape->move(10, 0); // Перемещаем фигуру вправо на 10 пикселей
+        update(); // Перерисовываем окно
+    }
+}
+
+void MainWindow::onSliderValueChanged(int value) {
+    if (selectedShapeIndex != -1) {
+        double scaleFactor = value / 100.0; // Преобразуем значение ползунка в коэффициент масштабирования
+        qDebug() << "Масштабирование: коэффициент =" << scaleFactor;
+        shapes[selectedShapeIndex]->scale(scaleFactor); // Масштабируем выделенную фигуру
         update(); // Перерисовываем окно
     }
 }

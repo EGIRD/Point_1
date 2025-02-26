@@ -47,3 +47,12 @@ void Triangle::move(int dx, int dy) {
         point.setY(point.y() + dy);
     }
 }
+
+void Triangle::scale(double factor) {
+    QPoint center = centerOfMass(); // Центр треугольника
+    for (QPoint &point : points) {
+        // Масштабируем каждую точку относительно центра
+        point.setX(center.x() + (point.x() - center.x()) * factor);
+        point.setY(center.y() + (point.y() - center.y()) * factor);
+    }
+}

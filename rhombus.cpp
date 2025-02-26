@@ -44,3 +44,12 @@ void Rhombus::move(int dx, int dy) {
         point.setY(point.y() + dy);
     }
 }
+
+void Rhombus::scale(double factor) {
+    QPoint center = centerOfMass(); // Центр ромба
+    for (QPoint &point : points) {
+        // Масштабируем каждую точку относительно центра
+        point.setX(center.x() + (point.x() - center.x()) * factor);
+        point.setY(center.y() + (point.y() - center.y()) * factor);
+    }
+}
