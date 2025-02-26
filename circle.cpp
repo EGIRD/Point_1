@@ -1,8 +1,13 @@
 #include "circle.h"
 #include <cmath>
+#include <QDebug>
 
 Circle::Circle(const QPoint &center, int radius, const QColor &color)
-    : Shape(color), center(center), radius(radius) {}
+    : Shape(color), center(center), radius(radius) {
+    if (radius <= 0) {
+        qDebug() << "Ошибка: радиус круга должен быть положительным";
+    }
+}
 
 void Circle::draw(QPainter &painter) {
     painter.setPen(color);

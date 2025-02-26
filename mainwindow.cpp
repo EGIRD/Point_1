@@ -8,7 +8,7 @@
 #include "triangle.h"
 #include "fivestar.h"
 #include "hexagon.h"
-//#include "octagon.h"
+#include "octagon.h"
 #include "hexstar.h"
 #include "octstar.h"
 
@@ -127,7 +127,9 @@ MainWindow::~MainWindow()
 
 // Вычисление радиуса на основе начальной и конечной точек
 int MainWindow::calculateRadius(const QPoint &startPoint, const QPoint &endPoint) const {
-    return static_cast<int>(std::hypot(endPoint.x() - startPoint.x(), endPoint.y() - startPoint.y()));
+    int dx = abs(endPoint.x() - startPoint.x()); // Абсолютное значение
+    int dy = abs(endPoint.y() - startPoint.y()); // Абсолютное значение
+    return static_cast<int>(std::hypot(dx, dy)); // Всегда положительное значение
 }
 
 // Создание фигур, зависящих от радиуса
@@ -137,8 +139,8 @@ Shape* MainWindow::createShapeBasedOnRadius(MainWindow::ShapeType type, const QP
         return new Circle(center, radius, currentColor);
     case HexagonShape:
         return new Hexagon(center, radius, currentColor);
-    // case OctagonShape:
-    //     return new Octagon(center, radius, currentColor);
+    case OctagonShape:
+        return new Octagon(center, radius, currentColor);
     case FiveStarShape:
         return new FiveStar(center, radius, currentColor);
     case HexStarShape:
@@ -154,11 +156,16 @@ Shape* MainWindow::createShapeBasedOnRadius(MainWindow::ShapeType type, const QP
 Shape* MainWindow::createShape(const QPoint &center, int width, int height, int ) {
     int radius = calculateRadius(startPoint, endPoint);
 
+    if (radius <= 0) {
+        qDebug() << "Ошибка: радиус должен быть положительным";
+        return nullptr;
+    }
+
     switch (currentShapeType) {
     case RectangleShape:
         return new Rectangle(startPoint, endPoint, currentColor);
     case SquareShape: {
-        int side = qMax(width, height);
+        int side = qMax(abs(width), abs(height));
         return new Square(center, side, currentColor);
     }
     case RhombusShape:
@@ -187,8 +194,8 @@ void MainWindow::onShapeSelected(int index) {
     case 3:
         currentShapeType = HexagonShape;
         break;
-    // case 4:
-    //     currentShapeType = OctagonShape;
+    case 4:
+         currentShapeType = OctagonShape;
         break;
     case 5:
         currentShapeType = TriangleShape;
@@ -210,11 +217,13 @@ void MainWindow::onShapeSelected(int index) {
 
 // Очистка всех фигур
 void MainWindow::clearShapes() {
+    qDebug() << "Очистка списка фигур";
     for (auto shape : shapes) {
-        delete shape;
+        delete shape; // Удаляем каждую фигуру
     }
-    shapes.clear();
-    update();
+    shapes.clear(); // Очищаем список
+    selectedShapeIndex = -1; // Сбрасываем индекс выделенной фигуры
+    update(); // Перерисовываем окно
 }
 
 // Выбор цвета
@@ -269,16 +278,24 @@ void MainWindow::moveShapeRight() {
 // mainwindow.cpp
 void MainWindow::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
+        // Снимаем выделение с предыдущей фигуры
+        if (selectedShapeIndex != -1) {
+            shapes[selectedShapeIndex]->resetColor(); // Возвращаем исходный цвет
+            selectedShapeIndex = -1; // Сбрасываем индекс выделенной фигуры
+            update(); // Перерисовываем окно
+        }
+
+        // Проверяем, какая фигура находится под курсором
         for (int i = 0; i < shapes.size(); ++i) {
             if (shapes[i]->contains(event->pos())) {
-                qDebug() << "Фигура выделена, индекс:" << i;
-                shapes[i]->selectedShape();
+                shapes[i]->selectedShape(); // Выделяем новую фигуру
                 selectedShapeIndex = i; // Сохраняем индекс выделенной фигуры
-                update(); // Перерисовка окна
+                update(); // Перерисовываем окно
                 return;
             }
         }
-        qDebug() << "Фигура не выделена (не найдена под курсором)";
+
+        // Если фигура не выделена, начинаем рисование новой фигуры
         startPoint = event->pos();
         isDrawing = true;
     }
@@ -307,6 +324,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
 // Обработка отпускания мыши
 void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton && isDrawing) {
+        qDebug() << "Создание новой фигуры";
         endPoint = event->pos();
         isDrawing = false;
 
@@ -317,8 +335,11 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
 
         Shape *shape = createShape(center, width, height, sideLength);
         if (shape) {
+            qDebug() << "Фигура создана, добавление в список";
             shapes.append(shape);
             update();
+        } else {
+            qDebug() << "Ошибка: фигура не создана";
         }
     }
 }
