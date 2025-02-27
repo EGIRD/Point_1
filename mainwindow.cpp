@@ -17,6 +17,7 @@
 #include <QMouseEvent>
 #include <QComboBox>
 #include <QPushButton>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <cmath>
 #include <QRect>
@@ -31,6 +32,15 @@ MainWindow::MainWindow(QWidget *parent)
     , selectedShapeIndex(-1)
 {
     ui->setupUi(this);
+
+    zoomInTimer = new QTimer(this);
+    zoomOutTimer = new QTimer(this);
+
+    zoomInTimer->setInterval(50); // Интервал для увеличения
+    zoomOutTimer->setInterval(50); // Интервал для уменьшения
+
+    connect(zoomInTimer, &QTimer::timeout, this, &MainWindow::zoomIn);
+    connect(zoomOutTimer, &QTimer::timeout, this, &MainWindow::zoomOut);
 
     // Инициализация выпадающего списка для выбора фигуры
     shapeComboBox = new QComboBox(this);
@@ -65,22 +75,20 @@ MainWindow::MainWindow(QWidget *parent)
     buttonLayout->addWidget(infoButton);
     buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignRight);
 
-    // Создание ползунка и кнопок-стрелок
-    QSlider *slider = new QSlider(Qt::Horizontal, this);
-    slider->setRange(10, 200); // Диапазон значений
-    slider->setValue(100); // Начальное значение
-    slider->setFixedSize(200, 30); // Размер ползунка
-
     QPushButton *upButton = new QPushButton("↑", this);
     QPushButton *downButton = new QPushButton("↓", this);
     QPushButton *leftButton = new QPushButton("←", this);
     QPushButton *rightButton = new QPushButton("→", this);
+    QPushButton *zoomInButton = new QPushButton("+", this);
+    QPushButton *zoomOutButton = new QPushButton("-", this);
 
     // Устанавливаем размер кнопок-стрелок
     upButton->setFixedSize(40, 40);
     downButton->setFixedSize(40, 40);
     leftButton->setFixedSize(40, 40);
     rightButton->setFixedSize(40, 40);
+    zoomInButton->setFixedSize(40, 40);
+    zoomOutButton->setFixedSize(40, 40);
 
     // Создание горизонтального layout для ползунка и кнопок-стрелок
     QHBoxLayout *bottomLayout = new QHBoxLayout();
@@ -88,7 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
     bottomLayout->addWidget(upButton);
     bottomLayout->addWidget(downButton);
     bottomLayout->addWidget(rightButton);
-    bottomLayout->addWidget(slider); // Добавляем ползунок
+    bottomLayout->addWidget(zoomInButton);
+    bottomLayout->addWidget(zoomOutButton);
     bottomLayout->setAlignment(Qt::AlignBottom); // Выравнивание по нижнему краю
 
     // Основной вертикальный layout
@@ -114,10 +123,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(leftButton, &QPushButton::clicked, this, &MainWindow::moveShapeLeft);
     connect(rightButton, &QPushButton::clicked, this, &MainWindow::moveShapeRight);
     // Подключение сигнала от ползунка
-    connect(slider, &QSlider::valueChanged, this, &MainWindow::onSliderValueChanged);
 
+    // Подключение кнопок к таймерам
+    connect(zoomInButton, &QPushButton::pressed, zoomInTimer, QOverload<>::of(&QTimer::start));
+    connect(zoomInButton, &QPushButton::released, zoomInTimer, &QTimer::stop);
 
+    connect(zoomOutButton, &QPushButton::pressed, zoomOutTimer, QOverload<>::of(&QTimer::start));
+    connect(zoomOutButton, &QPushButton::released, zoomOutTimer, &QTimer::stop);
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -132,6 +146,20 @@ int MainWindow::calculateRadius(const QPoint &startPoint, const QPoint &endPoint
     int dx = abs(endPoint.x() - startPoint.x()); // Абсолютное значение
     int dy = abs(endPoint.y() - startPoint.y()); // Абсолютное значение
     return static_cast<int>(std::hypot(dx, dy)); // Всегда положительное значение
+}
+
+void MainWindow::zoomIn() {
+    if (selectedShapeIndex != -1) {
+        shapes[selectedShapeIndex]->scale(1.05); // Увеличиваем на 5%
+        update(); // Перерисовываем окно
+    }
+}
+
+void MainWindow::zoomOut() {
+    if (selectedShapeIndex != -1) {
+        shapes[selectedShapeIndex]->scale(0.95); // Уменьшаем на 5%
+        update(); // Перерисовываем окно
+    }
 }
 
 // Создание фигур, зависящих от радиуса
@@ -197,7 +225,7 @@ void MainWindow::onShapeSelected(int index) {
         currentShapeType = HexagonShape;
         break;
     case 4:
-         currentShapeType = OctagonShape;
+        currentShapeType = OctagonShape;
         break;
     case 5:
         currentShapeType = TriangleShape;

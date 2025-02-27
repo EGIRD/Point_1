@@ -56,6 +56,8 @@ private slots:
     void moveShapeLeft();
     void moveShapeRight();
     void onSliderValueChanged(int value);
+    void zoomIn(); // Увеличение фигуры
+    void zoomOut();
 
 private:
     // Метод для создания фигуры
@@ -72,6 +74,8 @@ private:
     QPoint endPoint; // Конечная точка для рисования
     bool isDrawing; // Флаг для отслеживания рисования
     bool showInfo; // Флаг для отображения информации о фигурах
+    QTimer *zoomInTimer; // Таймер для увеличения
+    QTimer *zoomOutTimer;
 
     int selectedShapeIndex = -1; // Индекс выделенной фигуры
     void selectShape(const QPoint &point);
