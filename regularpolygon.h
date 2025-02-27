@@ -11,6 +11,7 @@ public:
     QPoint centerOfMass() const override;
     bool contains(const QPoint &point) const override;
 
+
 protected:
     QPoint center;
     int radius;

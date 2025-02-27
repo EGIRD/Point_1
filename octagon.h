@@ -10,7 +10,7 @@ public:
     double perimeter() const override;
     QPoint centerOfMass() const override;
     void move(int dx, int dy) override;
-
+    void scale(double factor) override;
 };
 
 #endif // OCTAGON_H

@@ -28,3 +28,15 @@ void Hexagon::move(int dx, int dy) {
         addPoint(QPoint(x, y));
     }
 }
+
+void Hexagon::scale(double factor) {
+    radius *= factor; // Масштабируем радиус
+    points.clear(); // Очищаем точки
+    double angleIncrement = 2 * M_PI / numSides;
+    for (int i = 0; i < numSides; ++i) {
+        double angle = i * angleIncrement;
+        int x = center.x() + radius * cos(angle);
+        int y = center.y() + radius * sin(angle);
+        addPoint(QPoint(x, y));
+    }
+}

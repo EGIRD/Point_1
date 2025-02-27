@@ -7,8 +7,8 @@
 #include "rhombus.h"
 #include "triangle.h"
 #include "fivestar.h"
-//#include "hexagon.h"
-//#include "octagon.h"
+#include "hexagon.h"
+#include "octagon.h"
 #include "hexstar.h"
 #include "octstar.h"
 
@@ -167,10 +167,10 @@ Shape* MainWindow::createShapeBasedOnRadius(MainWindow::ShapeType type, const QP
     switch (type) {
     case CircleShape:
         return new Circle(center, radius, currentColor);
-    // case HexagonShape:
-    //     return new Hexagon(center, radius, currentColor);
-    // case OctagonShape:
-    //     return new Octagon(center, radius, currentColor);
+    case HexagonShape:
+         return new Hexagon(center, radius, currentColor);
+     case OctagonShape:
+         return new Octagon(center, radius, currentColor);
     case FiveStarShape:
         return new FiveStar(center, radius, currentColor);
     case HexStarShape:
